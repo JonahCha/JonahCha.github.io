@@ -1,7 +1,5 @@
-/* Importing Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
 
-/* Root Variables */
 :root {
     --primary-color: #b74b4b;
     --background-color: black;
@@ -10,7 +8,6 @@
     --box-shadow-color: #b74b4b;
 }
 
-/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -22,7 +19,7 @@
 }
 
 html {
-    font-size: 62.5%; /* 1rem = 10px */
+    font-size: 62.5%;
 }
 
 body {
@@ -32,11 +29,8 @@ body {
     background-color: var(--background-color);
     color: var(--font-color);
 }
-
-/* Header Styles */
 header {
     margin-top: 20px;
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -45,6 +39,14 @@ header {
     justify-content: space-between;
     align-items: center;
     z-index: 100;
+    background-color: var(--background-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .logo {
@@ -59,22 +61,63 @@ header {
     transform: scale(1.1);
 }
 
-nav a {
+.menu {
+    display: flex;
+    list-style: none;
+}
+
+.menu li {
+    margin-left: 4rem;
+}
+
+.menu a {
     font-size: 1.8rem;
     color: var(--font-color);
-    margin-left: 4rem;
     font-weight: 500;
     transition: color 0.3s ease, border-bottom 0.3s ease;
     border-bottom: 3px solid transparent;
 }
 
-nav a:hover,
-nav a.active {
+.menu a:hover,
+.menu a.active {
     color: var(--primary-color);
     border-bottom: 3px solid var(--primary-color);
 }
 
-/* Responsive Navigation Styles */
+.menu-toggle {
+    display: none;
+    font-size: 3rem;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: var(--background-color);
+        padding: 2rem 0;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .menu li {
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    .menu.active {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+}
+
 @media (max-width: 995px) {
     nav {
         position: absolute;
@@ -106,7 +149,6 @@ nav a.active {
     }
 }
 
-/* Home Section Styles */
 .home {
     display: flex;
     justify-content: center;
@@ -146,7 +188,6 @@ span {
     transform: scale(1.05);
 }
 
-/* Social Icons Styles */
 .social-icons a {
     display: inline-flex;
     justify-content: center;
@@ -169,7 +210,6 @@ span {
     box-shadow: 0 0 25px var(--box-shadow-color);
 }
 
-/* Button Styles */
 .btn {
     display: inline-block;
     padding: 1rem 2.8rem;
@@ -191,14 +231,12 @@ span {
     box-shadow: 0 0 25px var(--box-shadow-color);
 }
 
-/* Typing Text Styles */
 .typing-text {
     font-size: 3.4rem;
     font-weight: 600;
     min-width: 280px;
 }
 
-/* Media Queries for Responsiveness */
 @media (max-width: 1000px) {
     .home {
         gap: 4rem;
@@ -237,7 +275,6 @@ span {
     }
 }
 
-/* Sections Styling */
 section {
     min-height: 100vh;
     padding: 5rem 9%;
@@ -260,46 +297,108 @@ h2 {
     margin-bottom: 4rem;
 }
 
-/* Skills Section Styling */
 #skills {
-    background-color: var(--background-color); /* Use your defined background color */
-    color: var(--font-color); /* Use your defined font color */
-    padding: 5rem 9%; /* Spacing around the section */
-    text-align: center; /* Centered text */
+    padding: 5rem 9%;
+    text-align: center;
 }
 
 #skills h2 {
-    font-size: 4rem; /* Heading size */
-    font-weight: 700; /* Bold text */
-    margin-bottom: 3rem; /* Space below the heading */
-    color: var(--primary-color); /* Primary color for the heading */
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--font-color);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    padding-bottom: 1rem;
 }
 
 .skills-container {
-    list-style: none; /* Remove default list styles */
-    padding: 0; /* Remove default padding */
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+    list-style: none;
+    padding: 0;
 }
 
 .skills-container li {
-    font-size: 1.8rem; /* Font size for list items */
-    margin: 1.5rem 0; /* Space between items */
-    position: relative; /* For pseudo-element positioning */
-    padding-left: 1.5rem; /* Space before the text */
+    font-size: 1.8rem;
+    margin: 1.5rem 0;
+    position: relative;
+    padding-left: 2rem;
+    transition: transform 0.3s ease;
 }
 
 .skills-container li::before {
-    content: ''; /* Pseudo-element to create a custom bullet */
-    position: absolute; /* Absolute positioning */
-    left: 0; /* Align to the left */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%); /* Adjust vertical alignment */
-    width: 10px; /* Bullet width */
-    height: 10px; /* Bullet height */
-    background-color: var(--primary-color); /* Bullet color */
-    border-radius: 50%; /* Make it a circle */
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
 }
 
-/* Container Styles */
+.skills-container li:hover {
+    transform: scale(1.05);
+    color: var(--primary-color);
+}
+
+.skill-box {
+    flex: 1;
+    padding: 2.5rem;
+    background-color: #1a1a1a;
+    border: 0.2rem solid var(--border-color);
+    border-radius: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.skill-box:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px var(--box-shadow-color);
+}
+
+.skill-box:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.skill-box:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.skill-box:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.skill-box h3 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-transform: capitalize;
+}
+
+.skill-box p {
+    font-size: 1.6rem;
+    color: #ddd;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .services-container,
 .skills-container,
 .education-container,
@@ -311,23 +410,31 @@ h2 {
     gap: 3rem;
 }
 
-/* Box Styling */
 .service-box,
 .education-box,
 .experience-box {
     flex: 1;
-    padding: 2rem;
+    padding: 2.5rem;
     background-color: #1a1a1a;
     border: 0.2rem solid var(--border-color);
     border-radius: 2rem;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-box:hover,
+.education-box:hover,
+.experience-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px var(--box-shadow-color);
 }
 
 .service-box i,
 .education-box h3,
 .experience-box h3 {
-    font-size: 2.4rem;
+    font-size: 5rem;
     color: var(--primary-color);
+    text-transform: capitalize;
 }
 
 .service-box p,
@@ -337,11 +444,47 @@ h2 {
     color: #ddd;
 }
 
-/* Contact Section */
+.education-container,
+.experience-container {
+    padding: 4rem 9%;
+    text-align: left;
+}
+
+.education-box h3,
+.experience-box h3 {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 1rem;
+}
+
+.education-box p,
+.experience-box p {
+    font-size: 1.8rem;
+    line-height: 1.6;
+}
+
+.education-box,
+.experience-box {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.education-box {
+    animation-delay: 0.1s;
+}
+
+.experience-box {
+    animation-delay: 0.2s;
+}
+
 .contact {
     padding: 5rem 9%;
-    background-color: #1a1a1a; /* Dark background for contrast */
-    color: white; /* White text for readability */
+    background-color: #1a1a1a;
+    color: white;
     text-align: center;
 }
 
@@ -357,8 +500,8 @@ h2 {
     align-items: center;
     gap: 4rem;
     flex-wrap: wrap;
-    max-width: 1200px; /* Ensure the section is not too wide */
-    margin: 0 auto; /* Center align */
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .contact-info {
@@ -385,26 +528,25 @@ h2 {
     padding: 1.2rem;
     font-size: 1.6rem;
     border-radius: 1rem;
-    background-color: #2a2a2a; /* Slightly lighter background */
-    border: 0.2rem solid #b74b4b; /* Border color to match your theme */
-    color: white; /* Text color */
+    background-color: #2a2a2a;
+    border: 0.2rem solid #b74b4b;
+    color: white;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
-    border-color: #b74b4b; /* Highlight border on focus */
+    border-color: #b74b4b;
 }
 
 .contact-form button {
     padding: 1rem 2rem;
     font-size: 1.6rem;
-    background-color: #b74b4b; /* Button color */
-    color: black; /* Button text color */
+    background-color: #b74b4b;
+    color: black;
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Responsive Styles for Contact Section */
 @media (max-width: 768px) {
     .contact-container {
         flex-direction: column;
@@ -416,25 +558,33 @@ h2 {
     }
 }
 
-/* Footer Styles */
 footer {
-    background-color: #1a1a1a; /* Footer background color */
-    color: var(--font-color); /* Footer text color */
-    text-align: center; /* Centered text */
-    padding: 2rem 0; /* Padding around footer */
-    position: relative; /* Ensures the footer is below the main content */
+    background-color: #1a1a1a;
+    color: var(--font-color);
+    text-align: center;
+    padding: 2rem 0;
+    position: relative;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
 footer .social-icons {
-    margin-top: 1rem; /* Space above social icons */
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
 }
 
 footer .social-icons a {
-    margin: 0 1rem; /* Space between social icons */
-    font-size: 2rem; /* Size of social icon */
-    color: var(--primary-color); /* Primary color for icons */
+    margin: 0 1rem;
+    font-size: 2rem;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
 }
 
 footer .social-icons a:hover {
-    color: white; /* Change color on hover */
+    color: white;
 }
