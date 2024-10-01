@@ -6,24 +6,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <title>Jonah Chawre Portfolio</title>
-    <link rel="icon" href="img.png">
+    <link rel="icon" href="logo.png">
 </head>
 <body>
     <header>
-        <a href="#" class="logo">Jonah Chawre</a>
-        <nav>
-            <a href="#" class="active">Home</a>
-            <a href="#services">Services</a>
-            <a href="#skills">Skills</a>
-            <a href="#education">Education</a>
-            <a href="#experience">Experience</a>
-            <a href="#contact">Get in Touch</a>
-        </nav>
+        <div class="header-content">
+            <div class="logo">
+                <img src="logo-white.png" alt="Jonah Chawre Logo" style="height: 200px;">
+            </div>
+            <nav class="navbar">
+                <ul class="menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
-
+    
     <main>
         <!-- Home Section -->
-        <section class="home">
+        <section id="home" class="home">
             <div class="home-img">
                 <img src="20240929_141842.png" alt="Jonah Chawre">
             </div>
@@ -63,17 +69,28 @@
             </div>
         </section>
 
-       <!-- Skills Section -->
-<section id="skills">
-    <h2>Skills</h2>
-    <ul class="skills-container">
-        <li><strong>Software:</strong> SolidWorks, Fusion 360, AutoCAD, MATLAB</li>
-        <li><strong>Design:</strong> CAD Modeling, Finite Element Analysis (FEA), 3D Printing</li>
-        <li><strong>Programming:</strong> Python, MATLAB</li>
-        <li><strong>Soft Skills:</strong> Problem-solving, Time Management, Teamwork</li>
-    </ul>
-</section>
-
+        <!-- Skills Section -->
+        <section id="skills">
+            <h2>Skills</h2>
+            <div class="skills-container">
+                <div class="skill-box">
+                    <h3>Software</h3>
+                    <p>SolidWorks, Fusion 360, AutoCAD, MATLAB</p>
+                </div>
+                <div class="skill-box">
+                    <h3>Design</h3>
+                    <p>CAD Modeling, Finite Element Analysis (FEA), 3D Printing</p>
+                </div>
+                <div class="skill-box">
+                    <h3>Programming</h3>
+                    <p>Python, MATLAB</p>
+                </div>
+                <div class="skill-box">
+                    <h3>Soft Skills</h3>
+                    <p>Problem-solving, Time Management, Teamwork</p>
+                </div>
+            </div>
+        </section>
 
         <!-- Education Section -->
         <section id="education">
@@ -81,13 +98,13 @@
             <div class="education-container">
                 <div class="education-box">
                     <h3>Bachelor of Engineering in Mechanical Engineering</h3>
-                    <p><strong>Institution:</strong> ABC Institute of Technology, Nagpur</p>
-                    <p><strong>Year:</strong> 2020 - Present</p>
+                    <p><strong>Institution: </strong>Suryodya College of Engineering and Technology</p>
+                    <p><strong>Year: </strong> 2022 - Present</p>
                 </div>
                 <div class="education-box">
                     <h3>Higher Secondary School (12th Grade)</h3>
-                    <p><strong>Institution:</strong> XYZ Junior College, Nagpur</p>
-                    <p><strong>Year:</strong> 2018 - 2020</p>
+                    <p><strong>Institution: </strong> SKPC Porwal College Kanptee</p>
+                    <p><strong>Year: </strong> 2020 - 2022</p>
                 </div>
             </div>
         </section>
@@ -98,14 +115,14 @@
             <div class="experience-container">
                 <div class="experience-box">
                     <h3>Intern, Mechanical Design</h3>
-                    <p><strong>Company:</strong> DEF Design Solutions</p>
-                    <p><strong>Duration:</strong> June 2023 - August 2023</p>
+                    <p><strong>Company: </strong>DCS Solutions</p>
+                    <p><strong>Duration: </strong> June 2022 - Present</p>
                     <p>Worked on various design projects, developed 3D models, and assisted in product prototyping for industrial clients.</p>
                 </div>
                 <div class="experience-box">
-                    <h3>Freelance Mechanical Engineer</h3>
-                    <p><strong>Duration:</strong> 2021 - Present</p>
-                    <p>Providing freelance design services including CAD modeling, mechanical simulation, and technical drawings for clients across different industries.</p>
+                    <h3>Mechanical Design Engineer</h3>
+                    <p><strong>Duration: </strong> 2022 - 2023</p>
+                    <p>Providing design services including CAD modeling, mechanical simulation, and technical drawings for clients across different industries.</p>
                 </div>
             </div>
         </section>
@@ -134,5 +151,25 @@
             </div>
         </section>
     </main>
+
+    <footer>
+        <div class="footer-content" style="text-align: center;">
+            <p>&copy; 2024 Jonah Chawre. All Rights Reserved.</p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.twitter.com" target="_blank" aria-label="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
