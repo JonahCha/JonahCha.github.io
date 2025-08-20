@@ -1,133 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Font Awesome 6 (brands fixed) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
     <title>Jonah Chawre Portfolio</title>
-    <link rel="icon" href="logo.png">
+    <link rel="icon" href="logo.png" />
 </head>
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">
-                <img src="logo-white.png" alt="Jonah Chawre Logo" style="height: 200px;">
-            </div>
+            <!-- logo removed -->
+
+            <!-- mobile hamburger -->
+            <button class="menu-toggle" aria-expanded="false" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
             <nav class="navbar">
                 <ul class="menu">
-                    <li><a href="#home">Home</a></li>
+                    <li><a href="#home" aria-current="page">Home</a></li>
                     <li><a href="#services">Services</a></li>
-                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
                     <li><a href="#education">Education</a></li>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#certifications">Certifications</a></li>
+                    <li><a href="#contact">Get in Touch</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-    
+
     <main>
-        <!-- Home Section -->
+        <!-- Home / Hero -->
         <section id="home" class="home">
             <div class="home-img">
-                <img src="20240929_141842.png" alt="Jonah Chawre">
+                <img src="20240929_141842.png" alt="Jonah Chawre" />
             </div>
             <div class="home-content">
-                <h1>Hi, It's <span>Jonah Chawre</span></h1>
-                <h3 class="typing-text">I'm a <span>Mechanical Design Engineer</span></h3>
-                <p>I’m an engineering student currently pursuing a career in product design with a focus on mechanical design, proficient in SolidWorks, Fusion 360, and designing real-world solutions for complex engineering problems.</p>
+                <h1>Hi, I'm <span>Jonah Chawre</span></h1>
+                <h3 class="typing-text">Aspiring <span>Data Analyst</span></h3>
+                <p>
+                    I turn messy data into useful answers. I’m learning fast, building real projects in Python and Excel, and sharing clean dashboards that make decisions easier. If you like clear insights, we’ll get along.
+                </p>
                 <div class="social-icons">
-                    <a href="https://www.linkedin.com/in/jonahchawre/" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://github.com/JonahCha" title="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://x.com/jonah_chawre" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/jonahchawre?igsh=Z2JvM21xNjVpd3Qx" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/jonahchawre/" title="LinkedIn" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com/JonahCha" title="GitHub" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <!-- Twitter/X and Instagram removed -->
                 </div>
                 <a href="#contact" class="btn">Get in Touch</a>
             </div>
         </section>
 
-        <!-- Services Section -->
+        <!-- Services (5 cards, DA-focused; keep as-is for now) -->
         <section id="services">
             <h2>Services</h2>
             <div class="services-container">
-                <div class="service-box">
-                    <i class="fas fa-cogs"></i>
-                    <h3>Mechanical Design</h3>
-                    <p>Providing high-quality mechanical design solutions using SolidWorks, Fusion 360, and AutoCAD.</p>
+                <div class="service-box pop-on-hover">
+                    <i class="fa-solid fa-broom"></i>
+                    <h3>Data Cleaning & Prep</h3>
+                    <p>Fixing missing values, formatting columns, and preparing tidy datasets that are ready for analysis.</p>
                 </div>
-                <div class="service-box">
-                    <i class="fas fa-drafting-compass"></i>
-                    <h3>Product Prototyping</h3>
-                    <p>Transforming ideas into prototypes by leveraging rapid prototyping tools and 3D printing technologies.</p>
+                <div class="service-box pop-on-hover">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Exploratory Analysis</h3>
+                    <p>Finding patterns, outliers, and trends with Python and Excel to answer real questions fast.</p>
                 </div>
-                <div class="service-box">
-                    <i class="fas fa-project-diagram"></i>
-                    <h3>Project Management</h3>
-                    <p>Managing engineering projects efficiently with a focus on design, time management, and resource allocation.</p>
+                <div class="service-box pop-on-hover">
+                    <i class="fa-solid fa-table"></i>
+                    <h3>SQL Queries & Reports</h3>
+                    <p>Writing clean SQL for pulls, joins, and KPIs so teams can track what actually matters.</p>
+                </div>
+                <div class="service-box pop-on-hover">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <h3>Interactive Dashboards</h3>
+                    <p>Building clear, simple dashboards (Power BI / Tableau alternatives) that non-tech folks love.</p>
+                </div>
+                <div class="service-box pop-on-hover">
+                    <i class="fa-solid fa-robot"></i>
+                    <h3>Predictive Basics</h3>
+                    <p>Simple, interpretable models for baseline forecasting and classification when you need a head start.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Skills Section -->
-        <section id="skills">
-            <h2>Skills</h2>
+        <!-- Projects (replaces Skills) -->
+        <section id="projects">
+            <h2>Projects</h2>
             <div class="skills-container">
-                <div class="skill-box">
-                    <h3>Software</h3>
-                    <p>SolidWorks, Fusion 360, AutoCAD, MATLAB</p>
+                <div class="skill-box pop-on-hover">
+                    <h3><i class="fa-solid fa-film"></i> Netflix Titles EDA</h3>
+                    <p>Cleaned and explored the Netflix catalog to find trends in genres, release years, and content types. Python + Pandas + Matplotlib.</p>
                 </div>
-                <div class="skill-box">
-                    <h3>Design</h3>
-                    <p>CAD Modeling, Finite Element Analysis (FEA), 3D Printing</p>
+                <div class="skill-box pop-on-hover">
+                    <h3><i class="fa-solid fa-store"></i> Sales Insights Dashboard</h3>
+                    <p>Built an interactive dashboard for monthly revenue, top products, and geo-performance. Excel / Power BI workflow.</p>
                 </div>
-                <div class="skill-box">
-                    <h3>Programming</h3>
-                    <p>Python, MATLAB</p>
+                <div class="skill-box pop-on-hover">
+                    <h3><i class="fa-solid fa-user-shield"></i> Churn Exploration</h3>
+                    <p>EDA to spot churn drivers and segment users before they drop off. Feature engineering + quick baselines in Python.</p>
                 </div>
-                <div class="skill-box">
-                    <h3>Soft Skills</h3>
-                    <p>Problem-solving, Time Management, Teamwork</p>
+                <div class="skill-box pop-on-hover">
+                    <h3><i class="fa-solid fa-virus-covid"></i> COVID Data Tracker</h3>
+                    <p>Time-series exploration of cases and recoveries with moving averages and simple trend alerts.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Education Section -->
+        <!-- Education (cards; compact) -->
         <section id="education">
             <h2>Education</h2>
             <div class="education-container">
-                <div class="education-box">
-                    <h3>Bachelor of Engineering in Mechanical Engineering</h3>
-                    <p><strong>Institution: </strong>Suryodya College of Engineering and Technology</p>
-                    <p><strong>Year: </strong> 2022 - Present</p>
+                <div class="education-box pop-on-hover">
+                    <h3>B.E. Mechanical Engineering</h3>
+                    <p><strong>Institution:</strong> Suryodya College of Engineering & Technology</p>
+                    <p><strong>Years:</strong> 2022 – Present</p>
                 </div>
-                <div class="education-box">
-                    <h3>Higher Secondary School (12th Grade)</h3>
-                    <p><strong>Institution: </strong> SKPC Porwal College Kanptee</p>
-                    <p><strong>Year: </strong> 2020 - 2022</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section id="experience">
-            <h2>Experience</h2>
-            <div class="experience-container">
-                <div class="experience-box">
-                    <h3>Intern, Mechanical Design</h3>
-                    <p><strong>Company: </strong>DCS Solutions</p>
-                    <p><strong>Duration: </strong> June 2022 - Present</p>
-                    <p>Worked on various design projects, developed 3D models, and assisted in product prototyping for industrial clients.</p>
-                </div>
-                <div class="experience-box">
-                    <h3>Mechanical Design Engineer</h3>
-                    <p><strong>Duration: </strong> 2022 - 2023</p>
-                    <p>Providing design services including CAD modeling, mechanical simulation, and technical drawings for clients across different industries.</p>
+                <div class="education-box pop-on-hover">
+                    <h3>Higher Secondary (12th)</h3>
+                    <p><strong>Institution:</strong> SKPC Porwal College, Kamptee</p>
+                    <p><strong>Years:</strong> 2020 – 2022</p>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- Certifications (cards; names only; animated) -->
+        <section id="certifications">
+            <h2>Certifications</h2>
+            <div class="education-container">
+                <div class="education-box pop-on-hover">
+                    <h3><i class="fa-solid fa-certificate"></i> Introduction to Data Analytics (IBM · Coursera)</h3>
+                </div>
+                <div class="education-box pop-on-hover">
+                    <h3><i class="fa-solid fa-award"></i> Associate Data Scientist (DataCamp)</h3>
+                </div>
+                <div class="education-box pop-on-hover">
+                    <h3><i class="fa-solid fa-graduation-cap"></i> Career Essentials in Data Analysis (Microsoft & LinkedIn)</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact (unchanged) -->
         <section id="contact" class="contact">
             <h2>Get in Touch</h2>
             <div class="contact-container">
@@ -138,10 +156,10 @@
                 </div>
                 <form class="contact-form" action="https://formspree.io/f/xldrqlva" method="POST">
                     <div class="input-box">
-                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="text" name="name" placeholder="Your Name" required />
                     </div>
                     <div class="input-box">
-                        <input type="email" name="email" placeholder="Your Email" required>
+                        <input type="email" name="email" placeholder="Your Email" required />
                     </div>
                     <div class="input-box">
                         <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
@@ -153,23 +171,51 @@
     </main>
 
     <footer>
-        <div class="footer-content" style="text-align: center;">
-            <p>&copy; 2024 Jonah Chawre. All Rights Reserved.</p>
+        <div class="footer-content">
+            <p>&copy; 2025 Jonah Chawre. All Rights Reserved.</p>
             <div class="social-icons">
-                <a href="https://www.facebook.com" target="_blank" aria-label="Facebook">
-                    <i class="fab fa-facebook-f"></i>
+                <!-- Facebook removed -->
+                <a href="https://www.linkedin.com/in/jonahchawre/" target="_blank" aria-label="LinkedIn">
+                    <i class="fa-brands fa-linkedin-in"></i>
                 </a>
-                <a href="https://www.twitter.com" target="_blank" aria-label="Twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.linkedin.com" target="_blank" aria-label="LinkedIn">
-                    <i class="fab fa-linkedin-in"></i>
+                <a href="https://github.com/JonahCha" target="_blank" aria-label="GitHub">
+                    <i class="fa-brands fa-github"></i>
                 </a>
             </div>
         </div>
     </footer>
+
+    <!-- JS for mobile menu + active link -->
+    <script>
+      // Mobile menu toggle
+      const toggleBtn = document.querySelector('.menu-toggle');
+      const menu = document.querySelector('.menu');
+      if (toggleBtn && menu) {
+        toggleBtn.addEventListener('click', () => {
+          const open = menu.classList.toggle('active');
+          toggleBtn.setAttribute('aria-expanded', String(open));
+        });
+      }
+
+      // Active link on scroll
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.menu a[href^="#"]');
+
+      function setActive(id) {
+        navLinks.forEach(a => {
+          const match = a.getAttribute('href').slice(1) === id;
+          a.classList.toggle('active', match);
+          if (match) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
+
+      sections.forEach(sec => observer.observe(sec));
+    </script>
 </body>
 </html>
