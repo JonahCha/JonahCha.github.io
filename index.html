@@ -30,30 +30,36 @@
   </header>
 
   <main>
-    <!-- Home / Hero -->
-    <section id="home" class="home reveal fade-up">
-      <div class="home-img">
-        <img src="20240929_141842.png" alt="Jonah Chawre" />
-      </div>
-      <div class="home-content">
-        <h1>Hi, I'm <span>Jonah Chawre</span></h1>
-        <h3 class="typing-text">Aspiring <span>Data Analyst</span></h3>
-        <p class="hero-blurb">
-          I turn messy data into useful answers. I build Python + Excel projects,
-          create clean visuals, and keep insights short and obvious. No fluff—just
-          what helps decisions.
-        </p>
-        <div class="social-icons">
-          <a href="https://www.linkedin.com/in/jonahchawre/" title="LinkedIn" aria-label="LinkedIn">
-            <i class="fa-brands fa-linkedin-in"></i>
-          </a>
-          <a href="https://github.com/JonahCha" title="GitHub" aria-label="GitHub">
-            <i class="fa-brands fa-github"></i>
-          </a>
-        </div>
-        <a href="#contact" class="btn">Get in Touch</a>
-      </div>
-    </section>
+  <!-- About Me Section -->
+<section id="about" class="reveal fade-up">
+  <h2>About Me</h2>
+  <div class="about-container" style="display:flex;flex-wrap:wrap;align-items:center;gap:3rem;justify-content:center;">
+    
+    <!-- Profile Image -->
+    <div class="about-img" style="flex:1;min-width:260px;text-align:center;">
+      <img src="20240929_141842.png" alt="Jonah Chawre" style="max-width:260px;border-radius:50%;box-shadow:0 0 25px var(--box-shadow-color);">
+    </div>
+
+    <!-- About Text -->
+    <div class="about-text" style="flex:2;min-width:280px;">
+      <p style="font-size:1.7rem;line-height:1.8;color:#eaeaea;">
+        Hi, I’m <span style="color:var(--primary-color);font-weight:600;">Jonah Chawre</span> 👋  
+        I’m an aspiring <strong>Data Analyst</strong> with a background in engineering. 
+        I enjoy digging into messy datasets, finding patterns, and turning numbers into stories people can actually understand.  
+
+        My journey started with mechanical design, but I found myself drawn to the problem-solving side of data. 
+        Now I’m building skills in Python, SQL, and visualization — and I love working on projects that feel practical, 
+        whether it’s analyzing Netflix datasets or creating dashboards that explain insights at a glance.  
+
+        Outside of the code and spreadsheets, I’m a curious learner who values consistency, discipline, 
+        and making things simple for others. Think of me as someone who mixes the structured mindset of engineering 
+        with the storytelling side of analytics.  
+      </p>
+      <a href="#contact" class="btn">Get in Touch</a>
+    </div>
+
+  </div>
+</section>
 
     <!-- Services (keep your 5 as-is; added reveal classes) -->
     <section id="services" class="reveal fade-up">
@@ -232,3 +238,4 @@
   </script>
 </body>
 </html>
+
