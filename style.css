@@ -40,6 +40,12 @@ header{
   border: none;              /* remove border */
   padding: 0;                /* remove spacing */
   outline: none;             /* remove focus outline */
+.menu-toggle i {
+  color: var(--primary-color);
+  background: transparent;
+}
+
+
 }
 
 
@@ -174,5 +180,6 @@ footer .social-icons a:hover{color:#fff;transform:translateY(-4px) scale(1.08)}
 .reveal.in-view{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
 .fade-up{} /* (class hook, visuals handled by .reveal) */
 .fade-in{} /* (class hook, visuals handled by .reveal) */
+
 
 
