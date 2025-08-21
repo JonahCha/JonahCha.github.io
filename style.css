@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;500&display=swap');
 
 :root{
   --primary-color:#b74b4b;
@@ -34,6 +34,12 @@ header{
 .menu-toggle{display:none;font-size:3rem;color:var(--primary-color);cursor:pointer;}
 
 @media (max-width:768px){
+  .hero-blurb {
+  font-size: 1.6rem;
+  line-height: 1.7;
+  text-align: left;   /* looks better on small screens */
+}
+
   .menu{
     display:none;flex-direction:column;width:100%;
     position:absolute;top:100%;left:0;background:var(--background-color);
@@ -54,6 +60,16 @@ span{color:var(--primary-color);}
 .home-img img{
   width:30vw;border-radius:50%;box-shadow:0 0 25px var(--box-shadow-color);
   transition:transform .3s ease;cursor:pointer;
+.hero-blurb {
+  font-family: 'Open Sans', sans-serif;   /* smoother font */
+  font-size: 1.8rem;                      /* slightly larger */
+  line-height: 1.8;                       /* more breathing room */
+  max-width: 65ch;                        /* better readability */
+  color: #e5e5e5;                         /* softer white */
+  margin: 1.5rem 0 2rem;                  /* spacing around text */
+  text-align: justify;                    /* clean block look */
+}
+
 }
 .home-img img:hover{transform:scale(1.05);}
 
@@ -148,3 +164,4 @@ footer .social-icons a:hover{color:#fff;transform:translateY(-4px) scale(1.08)}
 .reveal.in-view{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
 .fade-up{} /* (class hook, visuals handled by .reveal) */
 .fade-in{} /* (class hook, visuals handled by .reveal) */
+
