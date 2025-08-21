@@ -31,7 +31,17 @@ header{
   border-bottom:3px solid transparent;
 }
 .menu a:hover,.menu a.active{color:var(--primary-color);border-bottom:3px solid var(--primary-color);}
-.menu-toggle{display:none;font-size:3rem;color:var(--primary-color);cursor:pointer;}
+.menu-toggle {
+  display: none;
+  font-size: 3rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  background: transparent;   /* remove white box */
+  border: none;              /* remove border */
+  padding: 0;                /* remove spacing */
+  outline: none;             /* remove focus outline */
+}
+
 
 @media (max-width:768px){
   .hero-blurb {
@@ -164,4 +174,5 @@ footer .social-icons a:hover{color:#fff;transform:translateY(-4px) scale(1.08)}
 .reveal.in-view{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
 .fade-up{} /* (class hook, visuals handled by .reveal) */
 .fade-in{} /* (class hook, visuals handled by .reveal) */
+
 
