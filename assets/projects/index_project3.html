@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Demo: Netflix Data Analysis</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root{
+          --bg: #0b1220; --panel: #0e172a; --muted: #94a3b8; --text: #e5e7eb;
+          --brand1: #3b82f6; --brand2: #22d3ee; --border-color: rgba(255, 255, 255, 0.1);
+          --notebook-bg: rgba(15, 23, 42, .5);
+        }
+        *{box-sizing:border-box}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; }
+        .container{max-width:1200px;margin:0 auto;padding:0 24px}
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 48px 0; flex-wrap: wrap; gap: 20px; }
+        .header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; margin: 0; }
+        .header p { color: var(--muted); margin: 4px 0 0; }
+        .btn{ display:inline-block;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:600; font-size: 1rem; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 1px solid transparent; }
+        .btn:hover{ transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .btn-primary{background:linear-gradient(45deg, var(--brand1), var(--brand2));color:#fff; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);}
+        
+        /* Notebook Styling */
+        .notebook {
+            background: var(--notebook-bg);
+            border:1px solid var(--border-color);
+            border-radius:16px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            margin-bottom: 48px;
+        }
+        .cell { margin-bottom: 32px; }
+        .cell-input {
+            background-color: #1c253c;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .cell-input::before {
+            content: "In [ ]:";
+            position: absolute;
+            left: -60px;
+            top: 16px;
+            font-family: 'Fira Code', monospace;
+            color: var(--muted);
+        }
+        .cell-output { padding-left: 20px; }
+        .cell h2 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        .chart-container { position: relative; height: 400px; margin-top: 16px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { padding: 8px 12px; border: 1px solid var(--border-color); text-align: left; }
+        th { background-color: #1c253c; }
+
+        /* Fade-in Animation */
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fade-up.in { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="container">
+        <header class="header fade-up">
+            <div>
+                <h1>Project: Netflix Data Analysis</h1>
+                <p>A simulated Jupyter Notebook exploring the Netflix catalog.</p>
+            </div>
+            <a href="../../index.html" class="btn btn-primary">&larr; Back to Portfolio</a>
+        </header>
+        <main class="notebook fade-up" style="transition-delay: 200ms;">
+            <div class="cell">
+                <h2>1. Loading the Data</h2>
+                <div class="cell-input">
+                    <pre><code class="language-python">
+import pandas as pd
+df = pd.read_csv('netflix_titles.csv')
+df.head()
+                    </code></pre>
+                </div>
+                <div class="cell-output">
+                    <table>
+                        <thead><tr><th>show_id</th><th>type</th><th>title</th><th>country</th><th>release_year</th></tr></thead>
+                        <tbody>
+                            <tr><td>s1</td><td>Movie</td><td>Dick Johnson Is Dead</td><td>United States</td><td>2020</td></tr>
+                            <tr><td>s2</td><td>TV Show</td><td>Blood & Water</td><td>South Africa</td><td>2021</td></tr>
+                            <tr><td>s3</td><td>TV Show</td><td>Ganglands</td><td>France</td><td>2021</td></tr>
+                            <tr><td>s4</td><td>TV Show</td><td>Jailbirds New Orleans</td><td>United States</td><td>2021</td></tr>
+                            <tr><td>s5</td><td>TV Show</td><td>Kota Factory</td><td>India</td><td>2021</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="cell">
+                <h2>2. Content Growth Over Time</h2>
+                <div class="cell-input">
+                    <pre><code class="language-python">
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(10, 6))
+sns.countplot(x='release_year', hue='type', data=df, order=df.release_year.value_counts().iloc[:15].index)
+plt.title('Content added over the years')
+plt.show()
+                    </code></pre>
+                </div>
+                <div class="cell-output">
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cell">
+                <h2>3. Top 10 Movie Genres</h2>
+                <div class="cell-input">
+                    <pre><code class="language-python">
+movie_df = df[df['type'] == 'Movie']
+plt.figure(figsize=(12, 8))
+sns.countplot(y='listed_in', data=movie_df, order=movie_df.listed_in.value_counts().iloc[:10].index)
+plt.title('Top 10 Movie Genres')
+plt.show()
+                    </code></pre>
+                </div>
+                <div class="cell-output">
+                    <div class="chart-container">
+                        <canvas id="genreChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+        Chart.defaults.color = 'rgba(229, 231, 235, 0.8)';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+        // Growth Chart
+        new Chart(document.getElementById('growthChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['2016', '2017', '2018', '2019', '2020', '2021'],
+                datasets: [
+                    { label: 'Movies', data: [250, 400, 600, 700, 800, 750], borderColor: 'rgba(59, 130, 246, 1)', backgroundColor: 'rgba(59, 130, 246, 0.2)', fill: true, tension: 0.3 },
+                    { label: 'TV Shows', data: [100, 180, 280, 400, 550, 650], borderColor: 'rgba(34, 211, 238, 1)', backgroundColor: 'rgba(34, 211, 238, 0.2)', fill: true, tension: 0.3 }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: 'rgba(255,255,255,0.1)' } }, x: { grid: { display: false } } } }
+        });
+
+        // Genre Chart
+        new Chart(document.getElementById('genreChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Dramas, International Movies', 'Documentaries', 'Stand-Up Comedy', 'Comedies, Dramas, International', 'Dramas, Independent, International', 'Kids & Family Movies', 'Action & Adventure', 'Dramas', 'Children & Family Movies', 'Comedies'],
+                datasets: [{ label: 'Count', data: [362, 350, 334, 274, 252, 220, 210, 200, 190, 180], backgroundColor: 'rgba(34, 211, 238, 0.7)', borderRadius: 4 }]
+            },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { display: false } }, x: { grid: { color: 'rgba(255,255,255,0.1)' } } } }
+        });
+
+        // --- 3D Background ---
+        let scene, camera, renderer, group, mouseX = 0, mouseY = 0, windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
+        function isWebGLAvailable() { try { const canvas = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))); } catch (e) { return false; } }
+        function init3D() {
+            if (!isWebGLAvailable()) { console.warn("WebGL not available."); if(document.querySelector('#bg-canvas')) document.querySelector('#bg-canvas').style.display = 'none'; return; }
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 50;
+            renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            group = new THREE.Group();
+            scene.add(group);
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: false, transparent: true, opacity: 0.15 });
+            for (let i = 0; i < 150; i++) {
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+                cube.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                cube.scale.setScalar(Math.random() * 2 + 1);
+                group.add(cube);
+            }
+            document.addEventListener('mousemove', e => { mouseX = (e.clientX - windowHalfX) / 100; mouseY = (e.clientY - windowHalfY) / 100; });
+            window.addEventListener('resize', () => { windowHalfX = window.innerWidth / 2; windowHalfY = window.innerHeight / 2; camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+            animate3D();
+        }
+        function animate3D() { requestAnimationFrame(animate3D); camera.position.x += (mouseX - camera.position.x) * 0.05; camera.position.y += (-mouseY - camera.position.y) * 0.05; camera.lookAt(scene.position); group.rotation.y += 0.0005; group.rotation.x += 0.0005; renderer.render(scene, camera); }
+        init3D();
+        
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    });
+    </script>
+</body>
+</html>
+

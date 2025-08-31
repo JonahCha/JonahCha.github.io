@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Demo: Sales Revenue Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root{
+          --bg: #0b1220;
+          --panel: #0e172a;
+          --muted: #94a3b8;
+          --text: #e5e7eb;
+          --brand1: #3b82f6;
+          --brand2: #22d3ee;
+          --border-color: rgba(255, 255, 255, 0.1);
+        }
+        *{box-sizing:border-box}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+        #bg-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          z-index: -1;
+        }
+        .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 48px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            margin: 0;
+        }
+        .header p {
+            color: var(--muted);
+            margin: 4px 0 0;
+        }
+        .btn{
+          display:inline-block;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:600; font-size: 1rem;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          border: 1px solid transparent;
+        }
+        .btn:hover{
+          transform: translateY(-3px);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .btn-primary{background:linear-gradient(45deg, var(--brand1), var(--brand2));color:#fff; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);}
+        
+        /* Dashboard Styling */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background:rgba(15,23,42,.5);
+            border:1px solid var(--border-color);
+            border-radius:16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease;
+        }
+        .card:hover {
+            border-color: rgba(34, 211, 238, 0.5);
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+        .kpi {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .kpi-sub {
+            font-size: 0.9rem;
+            color: #16a34a; /* Green for positive change */
+        }
+        .full-width { grid-column: 1 / -1; }
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        /* Fade-in Animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-up.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="container">
+        <header class="header fade-up">
+            <div>
+                <h1>Project: Sales Revenue Dashboard</h1>
+                <p>A simulated, interactive Power BI dashboard.</p>
+            </div>
+            <a href="../../index.html" class="btn btn-primary">&larr; Back to Portfolio</a>
+        </header>
+
+        <main class="dashboard">
+            <div class="card fade-up" style="transition-delay: 200ms;">
+                <div class="card-title">Total Revenue</div>
+                <div class="kpi">$1.2M</div>
+                <div class="kpi-sub">+12.5% vs last month</div>
+            </div>
+            <div class="card fade-up" style="transition-delay: 300ms;">
+                <div class="card-title">Total Orders</div>
+                <div class="kpi">8,450</div>
+                <div class="kpi-sub">+8.2% vs last month</div>
+            </div>
+            <div class="card fade-up" style="transition-delay: 400ms;">
+                <div class="card-title">Average Order Value</div>
+                <div class="kpi">$142.01</div>
+                <div class="kpi-sub" style="color:#dc2626;">-1.1% vs last month</div>
+            </div>
+            <div class="card full-width fade-up" style="transition-delay: 500ms;">
+                <div class="card-title">Revenue by Region</div>
+                <div class="chart-container">
+                    <canvas id="revenueByRegionChart"></canvas>
+                </div>
+            </div>
+            <div class="card full-width fade-up" style="transition-delay: 600ms;">
+                <div class="card-title">Monthly Sales Trend</div>
+                <div class="chart-container">
+                    <canvas id="monthlySalesChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Chart.js Visualizations ---
+        Chart.defaults.color = 'rgba(229, 231, 235, 0.8)';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+        const revenueByRegionCtx = document.getElementById('revenueByRegionChart').getContext('2d');
+        new Chart(revenueByRegionCtx, {
+            type: 'bar',
+            data: { labels: ['North America', 'Europe', 'Asia-Pacific', 'South America', 'Africa'], datasets: [{ label: 'Revenue (in thousands)', data: [450, 310, 250, 150, 40], backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(34, 211, 238, 0.7)', 'rgba(16, 185, 129, 0.7)', 'rgba(245, 158, 11, 0.7)', 'rgba(139, 92, 246, 0.7)'], borderRadius: 4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { grid: { display: false } } } }
+        });
+
+        const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+        new Chart(monthlySalesCtx, {
+            type: 'line',
+            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'], datasets: [{ label: 'Monthly Sales (in thousands)', data: [90, 110, 105, 130, 145, 140, 160, 155], borderColor: 'rgba(34, 211, 238, 1)', backgroundColor: 'rgba(34, 211, 238, 0.2)', fill: true, tension: 0.4 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { grid: { display: false } } } }
+        });
+
+        // --- 3D Background ---
+        let scene, camera, renderer, group, mouseX = 0, mouseY = 0, windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
+        function isWebGLAvailable() { try { const canvas = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))); } catch (e) { return false; } }
+        function init3D() {
+            if (!isWebGLAvailable()) { console.warn("WebGL not available."); if(document.querySelector('#bg-canvas')) document.querySelector('#bg-canvas').style.display = 'none'; return; }
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 50;
+            renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            group = new THREE.Group();
+            scene.add(group);
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: false, transparent: true, opacity: 0.15 });
+            for (let i = 0; i < 150; i++) {
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+                cube.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                cube.scale.setScalar(Math.random() * 2 + 1);
+                group.add(cube);
+            }
+            document.addEventListener('mousemove', e => { mouseX = (e.clientX - windowHalfX) / 100; mouseY = (e.clientY - windowHalfY) / 100; });
+            window.addEventListener('resize', () => { windowHalfX = window.innerWidth / 2; windowHalfY = window.innerHeight / 2; camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+            animate3D();
+        }
+        function animate3D() { requestAnimationFrame(animate3D); camera.position.x += (mouseX - camera.position.x) * 0.05; camera.position.y += (-mouseY - camera.position.y) * 0.05; camera.lookAt(scene.position); group.rotation.y += 0.0005; group.rotation.x += 0.0005; renderer.render(scene, camera); }
+        init3D();
+
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    });
+    </script>
+</body>
+</html>
+

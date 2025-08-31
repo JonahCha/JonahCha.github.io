@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Demo: Coffee Machine</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --bg: #0b1220; --panel: #0e172a; --muted: #94a3b8; --text: #e5e7eb;
+          --brand1: #3b82f6; --brand2: #22d3ee; --border-color: rgba(255, 255, 255, 0.1);
+          --green: #22c55e; --yellow: #eab308; --red: #ef4444;
+        }
+        *{box-sizing:border-box}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; }
+        .container{max-width:1200px;margin:0 auto;padding:0 24px; width: 100%; flex-grow: 1; display: flex; flex-direction: column;}
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 48px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .header h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; margin: 0; }
+        .header p { color: var(--muted); margin: 4px 0 0; }
+        .btn{ display:inline-block;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:600; font-size: 1rem; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 1px solid transparent; }
+        .btn:hover{ transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .btn-primary{background:linear-gradient(45deg, var(--brand1), var(--brand2));color:#fff; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);}
+        
+        /* Terminal Styling */
+        .terminal-container {
+            background:rgba(15,23,42,.5);
+            border:1px solid var(--border-color);
+            border-radius:16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            font-family: 'Fira Code', monospace;
+            flex-grow: 1;
+            margin-bottom: 48px;
+        }
+        .terminal-output {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 16px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .terminal-output p { margin: 0 0 8px; }
+        .terminal-output .prompt { color: var(--brand2); }
+        .terminal-output .user-input { color: var(--text); }
+        .terminal-output .response { color: var(--muted); }
+        .terminal-output .error { color: var(--red); }
+        .terminal-output .success { color: var(--green); }
+        .terminal-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+        .terminal-btn {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--panel);
+            color: var(--text);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .terminal-btn:hover { background-color: rgba(59, 130, 246, 0.2); color: #fff; }
+
+        /* Fade-in Animation */
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .fade-up.in { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="container">
+        <header class="header fade-up">
+            <div>
+                <h1>Project: Coffee Machine</h1>
+                <p>An interactive simulation of my CLI coffee machine project.</p>
+            </div>
+            <a href="../../index.html" class="btn btn-primary">&larr; Back to Portfolio</a>
+        </header>
+        <main class="terminal-container fade-up" style="transition-delay: 200ms;">
+            <div id="terminal-output" class="terminal-output"></div>
+            <div id="terminal-controls" class="terminal-controls">
+                <button class="terminal-btn" data-cmd="espresso">1. Order Espresso</button>
+                <button class="terminal-btn" data-cmd="latte">2. Order Latte</button>
+                <button class="terminal-btn" data-cmd="cappuccino">3. Order Cappuccino</button>
+                <button class="terminal-btn" data-cmd="report">4. Get Report</button>
+                <button class="terminal-btn" data-cmd="off">5. Turn Off</button>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const output = document.getElementById('terminal-output');
+        const controls = document.getElementById('terminal-controls');
+        
+        const MENU = {
+            espresso: { ingredients: { water: 50, coffee: 18 }, cost: 1.5 },
+            latte: { ingredients: { water: 200, milk: 150, coffee: 24 }, cost: 2.5 },
+            cappuccino: { ingredients: { water: 250, milk: 100, coffee: 24 }, cost: 3.0 }
+        };
+        let resources = { water: 300, milk: 200, coffee: 100 };
+        let money = 0;
+        let machineOn = true;
+
+        function typeMessage(message, className = 'response', speed = 20) {
+            return new Promise(resolve => {
+                const p = document.createElement('p');
+                p.className = className;
+                output.appendChild(p);
+                let i = 0;
+                function typing() {
+                    if (i < message.length) {
+                        p.textContent += message.charAt(i);
+                        i++;
+                        output.scrollTop = output.scrollHeight;
+                        setTimeout(typing, speed);
+                    } else {
+                        resolve();
+                    }
+                }
+                typing();
+            });
+        }
+
+        async function processCommand(command) {
+            if (!machineOn && command !== 'off') {
+                await typeMessage("Machine is off. Please restart the demo.", "error");
+                return;
+            }
+
+            await typeMessage(`> ${command}`, 'prompt');
+
+            switch(command) {
+                case 'report':
+                    await typeMessage(`Water: ${resources.water}ml`);
+                    await typeMessage(`Milk: ${resources.milk}ml`);
+                    await typeMessage(`Coffee: ${resources.coffee}g`);
+                    await typeMessage(`Money: $${money.toFixed(2)}`);
+                    break;
+                case 'off':
+                    await typeMessage("Turning off the machine. Goodbye!", "success");
+                    machineOn = false;
+                    controls.style.display = 'none';
+                    break;
+                case 'espresso':
+                case 'latte':
+                case 'cappuccino':
+                    await handleOrder(command);
+                    break;
+                default:
+                    await typeMessage("Unknown command.", "error");
+            }
+            if(machineOn) await askForNext();
+        }
+
+        function checkResources(drink) {
+            const ingredients = MENU[drink].ingredients;
+            for (const item in ingredients) {
+                if (ingredients[item] > resources[item]) {
+                    return `Sorry there is not enough ${item}.`;
+                }
+            }
+            return true;
+        }
+
+        async function handleOrder(drink) {
+            const resourceCheck = checkResources(drink);
+            if (resourceCheck !== true) {
+                await typeMessage(resourceCheck, 'error');
+                return;
+            }
+            await typeMessage(`An ${drink} costs $${MENU[drink].cost.toFixed(2)}. Please insert coins.`);
+            // Simplified coin processing for web demo
+            const payment = await getPayment();
+            if (payment >= MENU[drink].cost) {
+                const change = payment - MENU[drink].cost;
+                money += MENU[drink].cost;
+                const ingredients = MENU[drink].ingredients;
+                for (const item in ingredients) {
+                    resources[item] -= ingredients[item];
+                }
+                if (change > 0) {
+                    await typeMessage(`Here is $${change.toFixed(2)} in change.`, "success");
+                }
+                await typeMessage(`Here is your ${drink} ☕. Enjoy!`, "success");
+            } else {
+                await typeMessage("Sorry that's not enough money. Money refunded.", "error");
+            }
+        }
+        
+        async function getPayment() {
+            // In a real CLI you'd ask for quarters, dimes etc.
+            // For this web sim, we'll use a prompt.
+            let payment = parseFloat(prompt("How much money are you inserting? (e.g., 3.50)"));
+            if(isNaN(payment) || payment < 0) {
+                await typeMessage("Invalid payment amount.", "error");
+                return 0;
+            }
+            await typeMessage(`You inserted $${payment.toFixed(2)}`);
+            return payment;
+        }
+
+
+        async function askForNext() {
+            await typeMessage("What would you like? (espresso/latte/cappuccino):", 'prompt');
+        }
+
+        controls.addEventListener('click', (e) => {
+            if (e.target.classList.contains('terminal-btn')) {
+                const command = e.target.dataset.cmd;
+                processCommand(command);
+            }
+        });
+
+        async function start() {
+            await typeMessage("Coffee Machine Initialized.", "success");
+            await askForNext();
+        }
+        start();
+
+        // --- 3D Background ---
+        let scene, camera, renderer, group, mouseX = 0, mouseY = 0, windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
+        function isWebGLAvailable() { try { const canvas = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))); } catch (e) { return false; } }
+        function init3D() {
+            if (!isWebGLAvailable()) { console.warn("WebGL not available."); if(document.querySelector('#bg-canvas')) document.querySelector('#bg-canvas').style.display = 'none'; return; }
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 50;
+            renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            group = new THREE.Group();
+            scene.add(group);
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: false, transparent: true, opacity: 0.15 });
+            for (let i = 0; i < 150; i++) {
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+                cube.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                cube.scale.setScalar(Math.random() * 2 + 1);
+                group.add(cube);
+            }
+            document.addEventListener('mousemove', e => { mouseX = (e.clientX - windowHalfX) / 100; mouseY = (e.clientY - windowHalfY) / 100; });
+            window.addEventListener('resize', () => { windowHalfX = window.innerWidth / 2; windowHalfY = window.innerHeight / 2; camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+            animate3D();
+        }
+        function animate3D() { requestAnimationFrame(animate3D); camera.position.x += (mouseX - camera.position.x) * 0.05; camera.position.y += (-mouseY - camera.position.y) * 0.05; camera.lookAt(scene.position); group.rotation.y += 0.0005; group.rotation.x += 0.0005; renderer.render(scene, camera); }
+        init3D();
+        
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    });
+    </script>
+</body>
+</html>
+
