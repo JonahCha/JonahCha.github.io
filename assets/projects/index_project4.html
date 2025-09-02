@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Data Analysis — Jonah Chawre</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b1220'/%3E%3Cpath d='M30 70 L30 30 L50 30' stroke='%233b82f6' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M70 70 L70 30 L50 30' stroke='%2322d3ee' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@^1"></script>
+
+    <style>
+        :root{
+          --bg: #0b1220;
+          --panel: #0e172a;
+          --muted: #94a3b8;
+          --text: #e5e7eb;
+          --brand1: #3b82f6;
+          --brand2: #22d3ee;
+          --border-color: rgba(255, 255, 255, 0.1);
+        }
+        *{box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body {
+            margin:0;
+            font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+            color:var(--text);
+            background:
+                radial-gradient(1200px 600px at 80% -10%, rgba(56,189,248,.15), transparent),
+                radial-gradient(800px 400px at 10% -10%, rgba(59,130,246,.15), transparent),
+                var(--bg);
+        }
+        .container{
+            width: 100%;
+            max-width:1100px;
+            margin:0 auto;
+            padding:0 24px
+        }
+        .section{position:relative; padding: clamp(40px, 8vw, 60px) 0;}
+
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin: 0;
+        }
+        .btn{display:inline-block;padding:10px 20px;border-radius:12px;text-decoration:none;font-weight:600; transition: transform 0.2s ease, box-shadow 0.2s ease;}
+        .btn-outline{border:1px solid var(--border-color);color:#e5e7eb}
+        .btn:hover{transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
+
+        /* Enhanced Card Styles */
+        .card {
+            background: rgba(14, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border:1px solid var(--border-color);
+            border-radius:16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+            transform: scale(1);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 16px;
+            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.15), transparent 80%);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 1;
+        }
+        .card:hover::before { opacity: 1; }
+        .card > * { position: relative; z-index: 2; }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px -10px rgba(0,0,0,0.4);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .card h3{ margin: 0 0 8px; font-size: 1.25rem; }
+        .card p { margin: 0; color: var(--muted); line-height: 1.6; }
+
+        /* Chart Library Styles */
+        .chart-library {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        @media (min-width: 900px) {
+            .chart-library {
+                flex-direction: row;
+            }
+        }
+
+        .chart-nav {
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+        }
+        
+        @media (min-width: 900px) {
+            .chart-nav {
+                flex-direction: column;
+                flex-shrink: 0;
+                width: 280px;
+                overflow-x: visible;
+                padding-bottom: 0;
+            }
+        }
+
+        .chart-nav-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--muted);
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .chart-nav-btn:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--text);
+        }
+
+        .chart-nav-btn.active {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-color: var(--brand1);
+            color: #fff;
+        }
+
+        .chart-display {
+            flex-grow: 1;
+            padding: 16px;
+            background-color: var(--bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            min-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <main class="section">
+        <div class="container">
+            <header class="page-header">
+                <h1>Recipe Data Analysis</h1>
+                <a href="../../index.html" class="btn btn-outline">Back to Portfolio</a>
+            </header>
+
+            <div class="card">
+                <h3>Project Overview</h3>
+                <p>This project involves a comprehensive exploratory data analysis (EDA) of a recipe dataset. The primary goal was to clean and validate the data, uncover insights about nutritional content, and explore relationships between variables. The findings are visualized below in an interactive library, where you can switch between different charts to see the analysis.</p>
+            </div>
+
+            <h2 style="text-align: center; margin-top: 60px; margin-bottom: 30px;">Key Visualizations</h2>
+
+            <div class="card chart-library">
+                <nav class="chart-nav">
+                    <button class="chart-nav-btn active" data-chart="category">Category Distribution</button>
+                    <button class="chart-nav-btn" data-chart="calories">Calories Distribution</button>
+                    <button class="chart-nav-btn" data-chart="caloriesByCategory">Avg Calories by Category</button>
+                    <button class="chart-nav-btn" data-chart="correlation">Nutritional Correlation</button>
+                </nav>
+                <div class="chart-display">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Card hover/tilt effect
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+             card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
+
+        // Chart.js implementation
+        const chartTextColor = 'rgba(229, 231, 235, 0.8)';
+        const chartGridColor = 'rgba(255, 255, 255, 0.1)';
+        let currentChart = null;
+
+        const chartConfigs = {
+            category: {
+                type: 'bar',
+                data: {
+                    labels: ['Breakfast', 'Chicken', 'Pork', 'Beverages', 'Potato', 'Dessert'],
+                    datasets: [{
+                        label: 'Number of Recipes',
+                        data: [148, 131, 105, 92, 88, 75],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: 'transparent' } }
+                    }
+                }
+            },
+            calories: {
+                type: 'bar',
+                data: {
+                    labels: ['0-250', '250-500', '500-750', '750-1k', '1k-1.25k', '1.25k+'],
+                    datasets: [{
+                        label: 'Number of Recipes',
+                        data: [433, 260, 115, 60, 22, 18],
+                        backgroundColor: 'rgba(34, 211, 238, 0.5)',
+                        borderColor: 'rgba(34, 211, 238, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: chartTextColor }, grid: { color: chartGridColor } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: 'transparent' } }
+                    }
+                }
+            },
+            caloriesByCategory: {
+                type: 'bar',
+                data: {
+                    labels: ['Beverages', 'Potato', 'Dessert', 'Breakfast', 'Chicken', 'Pork'],
+                    datasets: [{
+                        label: 'Average Calories',
+                        data: [115, 230, 350, 420, 510, 590],
+                        backgroundColor: ['rgba(59, 130, 246, 0.5)', 'rgba(34, 211, 238, 0.5)', 'rgba(168, 85, 247, 0.5)', 'rgba(236, 72, 153, 0.5)', 'rgba(249, 115, 22, 0.5)', 'rgba(239, 68, 68, 0.5)'],
+                        borderColor: ['rgba(59, 130, 246, 1)', 'rgba(34, 211, 238, 1)', 'rgba(168, 85, 247, 1)', 'rgba(236, 72, 153, 1)', 'rgba(249, 115, 22, 1)', 'rgba(239, 68, 68, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { color: chartTextColor }, grid: { color: 'transparent' } },
+                        x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }
+                    }
+                }
+            },
+            correlation: {
+                type: 'matrix',
+                data: {
+                    datasets: [{
+                        label: 'Correlation Heatmap',
+                        data: [
+                            {x: 'calories', y: 'calories', v: 1.0}, {x: 'carbohydrate', y: 'calories', v: 0.4}, {x: 'sugar', y: 'calories', v: 0.2}, {x: 'protein', y: 'calories', v: 0.5},
+                            {x: 'calories', y: 'carbohydrate', v: 0.4}, {x: 'carbohydrate', y: 'carbohydrate', v: 1.0}, {x: 'sugar', y: 'carbohydrate', v: 0.5}, {x: 'protein', y: 'carbohydrate', v: 0.1},
+                            {x: 'calories', y: 'sugar', v: 0.2}, {x: 'carbohydrate', y: 'sugar', v: 0.5}, {x: 'sugar', y: 'sugar', v: 1.0}, {x: 'protein', y: 'sugar', v: 0.0},
+                            {x: 'calories', y: 'protein', v: 0.5}, {x: 'carbohydrate', y: 'protein', v: 0.1}, {x: 'sugar', y: 'protein', v: 0.0}, {x: 'protein', y: 'protein', v: 1.0},
+                        ],
+                        backgroundColor: (ctx) => `rgba(34, 211, 238, ${ctx.raw.v * 0.9 + 0.1})`,
+                        borderColor: (ctx) => `rgba(34, 211, 238, ${ctx.raw.v * 0.9 + 0.2})`,
+                        borderWidth: 2,
+                        width: ({chart}) => (chart.chartArea || {}).width / 4 - 1,
+                        height: ({chart}) => (chart.chartArea || {}).height / 4 - 1,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: () => '',
+                                label: (context) => [`Correlation: ${context.raw.v.toFixed(2)}`, `(${context.raw.x}, ${context.raw.y})`]
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { type: 'category', labels: ['calories', 'carbohydrate', 'sugar', 'protein'], ticks: { color: chartTextColor }, grid: { display: false }, offset: true },
+                        x: { type: 'category', labels: ['calories', 'carbohydrate', 'sugar', 'protein'], ticks: { color: chartTextColor }, grid: { display: false }, offset: true }
+                    }
+                }
+            }
+        };
+
+        const ctx = document.getElementById('mainChart').getContext('2d');
+
+        function renderChart(chartName) {
+            if (currentChart) {
+                currentChart.destroy();
+            }
+            currentChart = new Chart(ctx, chartConfigs[chartName]);
+        }
+
+        const navButtons = document.querySelectorAll('.chart-nav-btn');
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                renderChart(button.dataset.chart);
+            });
+        });
+
+        // Initial render
+        renderChart('category');
+    });
+    </script>
+</body>
+</html>
+
