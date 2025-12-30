@@ -51,7 +51,7 @@ portfolio/
 ---
 
 ## 🌐 Live Demo
-👉 [View Portfolio](#) (Add your Netlify/GitHub Pages link here)
+👉 [View Portfolio](https://jonahchawre.live/) (Add your Netlify/GitHub Pages link here)
 
 ---
 
